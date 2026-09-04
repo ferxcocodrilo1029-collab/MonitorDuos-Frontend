@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 ## Nombre del proyecto 
 MoniDuo
 ## Descripción Breve
@@ -13,3 +14,7 @@ Eduardo Pat Maldonado
  Git, GitHub
  ### Lenguajes
  Python, Php, JavaScript, JSX, JSON
+=======
+# MonitorDuos
+Fernando y pat se encargaran de perfeccionar y mejorar la aplicación previamente hecha indivudualmente, pero ahora com más parametros
+>>>>>>> 8b69c00478ce1734ddabff42ca30d490b6679b08
