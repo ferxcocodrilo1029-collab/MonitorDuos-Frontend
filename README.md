@@ -29,6 +29,13 @@ Eduardo Pat Maldonado
 # Instalación
 1. Para clonar los repositorios se deben de ejecutar el comando git clone con la URL del repositorio, esto en la carpeta donde se elija 
 ```
-git clone https://github.com/ferxcocodrilo1029-collab/MonitorDuos.
+git clone https://github.com/ferxcocodrilo1029-collab/MonitorDuos-Frontend.
+```
 
+```
+git clone https://github.com/eduardopat09/MonitorDuos-BD.git
+
+```
+```
+git clone https://github.com/eduardopat09/MonitorDuos-Backend.git
 ```
