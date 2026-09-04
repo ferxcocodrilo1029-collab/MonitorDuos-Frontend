@@ -27,3 +27,8 @@ Eduardo Pat Maldonado
  PHP, Python
 
 # Instalación
+1. Para clonar los repositorios se deben de ejecutar el comando git clone con la URL del repositorio, esto en la carpeta donde se elija 
+```
+git clone https://github.com/ferxcocodrilo1029-collab/MonitorDuos.
+
+```
