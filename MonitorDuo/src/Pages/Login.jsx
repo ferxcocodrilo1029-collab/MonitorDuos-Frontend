@@ -1,12 +1,23 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 
+const LOCAL_USERNAME = 'numberone'
+const LOCAL_PASSWORD = '1234'
+
 function LoginPage() {
     const navigate = useNavigate()
     const [username, setUsername] = useState('')
     const [password, setPassword] = useState('')
+    const [error, setError] = useState('')
     function handleSubmit(event) {
         event.preventDefault()
+
+        if (username !== LOCAL_USERNAME || password !== LOCAL_PASSWORD) {
+            setError('Intruso Intruso Intruso')
+            return
+        }
+
+        setError('')
         navigate('/home', { replace: true })
     }
 
@@ -25,7 +36,10 @@ function LoginPage() {
                         type="text"
                         autoComplete="username"
                         value={username}
-                        onChange={(event) => setUsername(event.target.value)}
+                        onChange={(event) => {
+                            setUsername(event.target.value)
+                            setError('')
+                        }}
                         required
                     />
 
@@ -36,10 +50,14 @@ function LoginPage() {
                         type="password"
                         autoComplete="current-password"
                         value={password}
-                        onChange={(event) => setPassword(event.target.value)}
+                        onChange={(event) => {
+                            setPassword(event.target.value)
+                            setError('')
+                        }}
                         required
                     />
 
+                    {error && <p style={{ color: 'red', fontWeight: 'bold' }} role="alert">{error}</p>}
                     <button type="submit">Ingresar</button>
                 </form>
             </section>

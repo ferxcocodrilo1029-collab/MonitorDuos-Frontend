@@ -1,13 +1,15 @@
 import { useState } from 'react'
+import { useNavigate } from 'react-router-dom'
+import { getThresholds, isThresholdExceeded } from '../services/thresholdStorage'
 
 const emptyMetric = '--'
 
-function MetricCard({ title }) {
+function MetricCard({ title, currentValue }) {
     return (
         <article className="metric-card">
             <header>
                 <h2>{title}</h2>
-                <strong>{emptyMetric}</strong>
+                <strong>{currentValue ?? emptyMetric}{currentValue !== null ? '%' : ''}</strong>
             </header>
             <div className="chart-placeholder">Gráfica pendiente de conexión</div>
         </article>
@@ -15,7 +17,15 @@ function MetricCard({ title }) {
 }
 
 function HomePage() {
+    const navigate = useNavigate()
     const [activeTab, setActiveTab] = useState('live')
+    const thresholds = getThresholds()
+    const currentMetrics = {
+        'Servidor pendiente de conexión': { CPU: null, 'Memoria RAM': null, Disco: null },
+    }
+    const exceededThresholds = thresholds.filter((threshold) => (
+        isThresholdExceeded(threshold, currentMetrics[threshold.equipment]?.[threshold.metric])
+    ))
 
     return (
         <main className="dashboard-page">
@@ -25,8 +35,18 @@ function HomePage() {
                         <p className="eyebrow">Sistema Monitor</p>
                         <h1>Panel de monitoreo</h1>
                     </div>
-                    <button type="button">Cerrar sesión</button>
+                    <div className="header-actions">
+                        <button type="button" onClick={() => navigate('/alerts')}>Alertas</button>
+                        <button type="button">Cerrar sesión</button>
+                    </div>
                 </header>
+
+                {exceededThresholds.length > 0 && (
+                    <aside className="active-alert" role="alert">
+                        <strong>Alertas activas</strong>
+                        <span>{exceededThresholds.map((threshold) => `${threshold.metric} superó ${threshold.value}%`).join(' | ')}</span>
+                    </aside>
+                )}
 
                 <section className="host-selector" aria-labelledby="host-selector-title">
                     <label id="host-selector-title" htmlFor="host">Servidor monitoreado</label>
@@ -45,9 +65,9 @@ function HomePage() {
                     <section aria-labelledby="live-title">
                         <h2 id="live-title">Monitoreo en vivo</h2>
                         <div className="charts-grid">
-                            <MetricCard title="CPU" />
-                            <MetricCard title="Memoria RAM" />
-                            <MetricCard title="Disco" />
+                            <MetricCard title="CPU" currentValue={currentMetrics['Servidor pendiente de conexión'].CPU} />
+                            <MetricCard title="Memoria RAM" currentValue={currentMetrics['Servidor pendiente de conexión']['Memoria RAM']} />
+                            <MetricCard title="Disco" currentValue={currentMetrics['Servidor pendiente de conexión'].Disco} />
                             <article className="metric-card metric-card-wide">
                                 <h2>Uso combinado de recursos</h2>
                                 <div className="chart-placeholder">Gráfica combinada pendiente de conexión</div>

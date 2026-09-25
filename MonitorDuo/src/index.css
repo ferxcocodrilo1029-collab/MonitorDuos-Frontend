@@ -1,5 +1,5 @@
 :root {
-	font-family: 'Trebuchet MS', 'Segoe UI', sans-serif;
+	font-family: 'Arvo', serif;
 	color: #19333b;
 	background: #e8eee9;
 	font-synthesis: none;
@@ -42,17 +42,45 @@ button {
 }
 
 .login-page {
+	position: relative;
 	display: grid;
 	place-items: center;
+	overflow: hidden;
+	isolation: isolate;
+	background: #111;
+}
+
+.dashboard-page {
+	position: relative;
+	overflow: hidden;
+	isolation: isolate;
+	background: #111;
+}
+
+.login-page::before,
+.dashboard-page::before {
+	position: absolute;
+	inset: -4px;
+	z-index: -1;
+	content: '';
+	background-image: linear-gradient(rgba(0, 0, 0, .5), rgba(0, 0, 0, .8)), url('https://preview.redd.it/anyone-know-which-tv-is-what-number-in-the-order-i-know-the-v0-97k6oec5l4be1.png?width=1080&crop=smart&auto=webp&s=cfda62806d20f941e48b855f191f7ed50716cbcc');
+	background-position: center;
+	background-size: cover;
+	filter: blur(3px);
 }
 
 .login-card,
 .dashboard-card {
-	width: min(100%, 1120px);
-	border: 1px solid #c4d4cc;
-	border-radius: 18px;
-	background: rgba(255, 252, 244, .92);
-	box-shadow: 0 18px 50px rgba(25, 51, 59, .13);
+  background: rgba(32, 31, 31, 0.175);
+  backdrop-filter: blur(5px);
+  border: 1px solid rgba(255, 255, 255, 0.161);
+  border-radius: 16px; 
+  padding: 10px; 
+  color: #ffffff; 
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;  
 }
 
 .login-card {
@@ -63,7 +91,7 @@ button {
 .login-eyebrow,
 .eyebrow {
 	margin: 0 0 8px;
-	color: #d65d4c;
+	color: #fafafa;
 	font-size: .78rem;
 	font-weight: 800;
 	letter-spacing: .16em;
@@ -78,10 +106,11 @@ p {
 
 h1 {
 	margin-bottom: 10px;
-	color: #19333b;
-	font-family: Georgia, serif;
+	color: #abb2b2;
+	font-family: inherit;
 	font-size: clamp(2rem, 4vw, 3.2rem);
 	line-height: 1.05;
+	text-align: center;
 }
 
 h2 {
@@ -91,7 +120,7 @@ h2 {
 
 .login-description {
 	margin-bottom: 30px;
-	color: #667c7b;
+	color: #feffff;
 }
 
 form {
@@ -100,7 +129,7 @@ form {
 }
 
 label {
-	color: #406066;
+	color: #969797;
 	font-size: .82rem;
 	font-weight: 800;
 }
@@ -128,13 +157,13 @@ button {
 	border-radius: 9px;
 	padding: 10px 16px;
 	color: #fffdf8;
-	background: #2f8c83;
+	background: #4a4c4c;
 	font-weight: 800;
 	transition: transform .18s ease, background-color .18s ease;
 }
 
 button:hover {
-	background: #246f69;
+	background: #080f0f;
 	transform: translateY(-1px);
 }
 
@@ -153,8 +182,109 @@ button:hover {
 }
 
 .dashboard-header button {
-	color: #8e4037;
-	background: #f6ddd5;
+	color: #fffdf8;
+	background: #4a4c4c;
+}
+
+.dashboard-page button:hover {
+	background: #000;
+}
+
+.header-actions {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 10px;
+}
+
+.active-alert {
+	display: grid;
+	gap: 4px;
+	margin: 22px 0;
+	border: 1px solid #010101;
+	border-radius: 10px;
+	padding: 14px 16px;
+	color: #fff;
+	background: rgba(125, 35, 25, .72);
+}
+
+.page-description {
+	color: #f0f2f2;
+}
+
+.alerts-card {
+	gap: 28px;
+}
+
+.alert-form-section,
+.threshold-list {
+	display: grid;
+	gap: 14px;
+}
+
+.threshold-form {
+	display: grid;
+	grid-template-columns: 1.2fr 1.2fr .8fr auto;
+	align-items: end;
+	gap: 10px;
+}
+
+.threshold-field {
+	display: grid;
+	gap: 8px;
+}
+
+.threshold-form-actions,
+.threshold-actions {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 8px;
+}
+
+.threshold-form-actions button:last-child {
+	color: #19333b;
+	background: #dce8e2;
+}
+
+.form-error {
+	margin: 0;
+	color: #ffb8ad;
+	font-weight: 800;
+}
+
+.section-heading {
+	display: flex;
+	align-items: baseline;
+	justify-content: space-between;
+	gap: 16px;
+}
+
+.section-heading span {
+	color: #e0e5e5;
+	font-size: .85rem;
+}
+
+.threshold-item {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 20px;
+	border: 1px solid rgba(255, 255, 255, .2);
+	border-radius: 12px;
+	padding: 16px;
+	background: rgba(18, 23, 23, .44);
+}
+
+.threshold-item strong {
+	color: #fff;
+}
+
+.threshold-item p {
+	margin: 6px 0 0;
+	color: #d1d8d7;
+}
+
+.empty-state {
+	color: #e0e5e5;
 }
 
 .host-selector {
@@ -173,13 +303,13 @@ button:hover {
 }
 
 .dashboard-nav button {
-	color: #55706f;
-	background: transparent;
+	color: #fffdf8;
+	background: #4a4c4c;
 }
 
 .dashboard-nav button.is-active {
 	color: #fffdf8;
-	background: #19333b;
+	background: #242626;
 }
 
 .charts-grid {
@@ -301,6 +431,32 @@ button:hover {
 
 	.dashboard-header button {
 		width: 100%;
+	}
+
+	.header-actions,
+	.threshold-form,
+	.threshold-item {
+		width: 100%;
+	}
+
+	.header-actions,
+	.threshold-form,
+	.threshold-item {
+		flex-direction: column;
+	}
+
+	.threshold-form {
+		display: grid;
+	}
+
+	.threshold-form-actions,
+	.threshold-actions {
+		width: 100%;
+	}
+
+	.threshold-form-actions button,
+	.threshold-actions button {
+		flex: 1;
 	}
 
 	.dashboard-nav {
