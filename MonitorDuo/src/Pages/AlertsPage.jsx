@@ -6,6 +6,7 @@ import {
 } from '../services/thresholdStorage'
 
 const EMPTY_FORM = {
+    name: '',
     equipment: 'Servidor pendiente de conexión',
     metric: 'CPU',
     operator: 'gt',
@@ -33,6 +34,11 @@ function AlertsPage() {
         event.preventDefault()
         const numericValue = Number(form.value)
 
+        if (!form.name.trim()) {
+            setError('Escribe un nombre para la alerta.')
+            return
+        }
+
         if (!Number.isFinite(numericValue) || numericValue < 0 || numericValue > 100) {
             setError('Escribe un valor entre 0 y 100.')
             return
@@ -40,6 +46,7 @@ function AlertsPage() {
 
         const threshold = {
             ...form,
+            name: form.name.trim(),
             value: numericValue,
             id: editingId ?? `threshold-${Date.now()}`,
         }
@@ -55,6 +62,7 @@ function AlertsPage() {
 
     function handleEdit(threshold) {
         setForm({
+            name: threshold.name ?? threshold.metric,
             equipment: threshold.equipment,
             metric: threshold.metric,
             operator: threshold.operator,
@@ -87,20 +95,41 @@ function AlertsPage() {
     }
 
     return (
-        <main className="dashboard-page">
-            <section className="dashboard-card alerts-card">
+        <main className={`dashboard-page alerts-page${editingId ? ' is-editing' : ''}`}>
+            <section className={`dashboard-card alerts-card${editingId ? ' edit-alert-card' : ''}`}>
                 <header className="dashboard-header">
                     <div>
-                        <p className="eyebrow">Sistema Monitor</p>
-                        <h1>Alertas</h1>
-                        <p className="page-description">Configura los límites que requieren atención en cada equipo.</p>
+                        <p className="eyebrow">{editingId ? 'Editar alerta' : 'Sistema Monitor'}</p>
+                        <h1>{editingId ? form.name || form.metric : 'Alertas'}</h1>
+                        <p className="page-description">
+                            {editingId
+                                ? 'Actualiza las condiciones de esta alerta.'
+                                : 'Configura los límites que requieren atención en cada equipo.'}
+                        </p>
                     </div>
-                    <button type="button" onClick={() => navigate('/home')}>Volver al panel</button>
+                    <button
+                        type="button"
+                        onClick={editingId ? handleCancelEdit : () => navigate('/home')}
+                    >
+                        {editingId ? 'Volver a alertas' : 'Volver al panel'}
+                    </button>
                 </header>
 
-                <section className="alert-form-section" aria-labelledby="threshold-form-title">
-                    <h2 id="threshold-form-title">{editingId ? 'Modificar umbral' : 'Crear umbral'}</h2>
+                {!editingId && (
+                    <section className="alert-form-section" aria-labelledby="threshold-form-title">
+                    <h2 id="threshold-form-title">Crear alerta</h2>
                     <form className="threshold-form" onSubmit={handleSubmit}>
+                        <div className="threshold-field">
+                            <label htmlFor="alert-name">Nombre de la alerta</label>
+                            <input
+                                id="alert-name"
+                                type="text"
+                                value={form.name}
+                                onChange={(event) => setForm({ ...form, name: event.target.value })}
+                                placeholder="..."
+                                required
+                            />
+                        </div>
                         <div className="threshold-field">
                             <label htmlFor="alert-equipment">Equipo</label>
                             <select
@@ -151,14 +180,82 @@ function AlertsPage() {
                         </div>
 
                         <div className="threshold-form-actions">
-                            <button type="submit">{editingId ? 'Guardar cambios' : 'Agregar umbral'}</button>
-                            {editingId && <button type="button" onClick={handleCancelEdit}>Cancelar</button>}
+                            <button type="submit">Agregar alerta</button>
                         </div>
                     </form>
                     {error && <p className="form-error" role="alert">{error}</p>}
-                </section>
+                    </section>
+                )}
 
-                <section aria-labelledby="threshold-list-title">
+                {editingId && (
+                    <section className="alert-form-section threshold-edit-page" aria-labelledby="edit-threshold-title">
+                        <h2 id="edit-threshold-title">Configuración de alerta</h2>
+                        <form className="threshold-edit-form" onSubmit={handleSubmit}>
+                                <div className="threshold-field">
+                                    <label htmlFor="edit-alert-name">Nombre de la alerta</label>
+                                    <input
+                                        id="edit-alert-name"
+                                        type="text"
+                                        value={form.name}
+                                        onChange={(event) => setForm({ ...form, name: event.target.value })}
+                                        required
+                                    />
+                                </div>
+                                <div className="threshold-field">
+                                    <label htmlFor="edit-alert-equipment">Equipo</label>
+                                    <select
+                                        id="edit-alert-equipment"
+                                        value={form.equipment}
+                                        onChange={(event) => setForm({ ...form, equipment: event.target.value })}
+                                    >
+                                        <option>Servidor pendiente de conexión</option>
+                                    </select>
+                                </div>
+                                <div className="threshold-field">
+                                    <label htmlFor="edit-alert-metric">Métrica</label>
+                                    <select
+                                        id="edit-alert-metric"
+                                        value={form.metric}
+                                        onChange={(event) => setForm({ ...form, metric: event.target.value })}
+                                    >
+                                        <option>CPU</option>
+                                        <option>Memoria RAM</option>
+                                        <option>Disco</option>
+                                    </select>
+                                </div>
+                                <div className="threshold-field">
+                                    <label htmlFor="edit-alert-operator">Condición</label>
+                                    <select
+                                        id="edit-alert-operator"
+                                        value={form.operator}
+                                        onChange={(event) => setForm({ ...form, operator: event.target.value })}
+                                    >
+                                        <option value="gt">Mayor a</option>
+                                        <option value="lt">Menor a</option>
+                                    </select>
+                                </div>
+                                <div className="threshold-field">
+                                    <label htmlFor="edit-alert-value">Valor (%)</label>
+                                    <input
+                                        id="edit-alert-value"
+                                        type="number"
+                                        min="0"
+                                        max="100"
+                                        value={form.value}
+                                        onChange={(event) => setForm({ ...form, value: event.target.value })}
+                                        required
+                                    />
+                                </div>
+                                <div className="threshold-form-actions">
+                                    <button type="submit">Guardar cambios</button>
+                                    <button type="button" onClick={handleCancelEdit}>Cancelar</button>
+                                </div>
+                        </form>
+                        {error && <p className="form-error" role="alert">{error}</p>}
+                    </section>
+                )}
+
+                {!editingId && <section aria-labelledby="threshold-list-title">
                     <div className="section-heading">
                         <h2 id="threshold-list-title">Umbrales configurados</h2>
                         <span>{thresholds.length} configurados</span>
@@ -170,7 +267,7 @@ function AlertsPage() {
                             {thresholds.map((threshold) => (
                                 <article className="threshold-item" key={threshold.id}>
                                     <div>
-                                        <strong>{threshold.metric}</strong>
+                                        <strong>{threshold.name || threshold.metric}</strong>
                                         <p>{formatThreshold(threshold)}</p>
                                     </div>
                                     <div className="threshold-actions">
@@ -181,7 +278,7 @@ function AlertsPage() {
                             ))}
                         </div>
                     )}
-                </section>
+                </section>}
             </section>
         </main>
     )

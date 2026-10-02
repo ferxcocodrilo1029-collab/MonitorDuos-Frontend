@@ -69,6 +69,14 @@ button {
 	filter: blur(3px);
 }
 
+.dashboard-page.is-editing::before {
+	filter: blur(6px) brightness(.5);
+}
+
+.alerts-page::before {
+	background-image: linear-gradient(rgba(0, 0, 0, .5), rgba(0, 0, 0, .8)), url('https://preview.redd.it/impossible-bangboo-repair-v0-hb5c9oi612ve1.png?auto=webp&s=0a360ba7498f37a895c5df3d3371ec9e8efd1877');
+}
+
 .login-card,
 .dashboard-card {
   background: rgba(32, 31, 31, 0.175);
@@ -86,6 +94,54 @@ button {
 .login-card {
 	width: min(100%, 430px);
 	padding: 42px;
+}
+
+.login-card--error-0 {
+	animation: login-invalid-0 500ms ease-in-out both;
+}
+
+.login-card--error-1 {
+	animation: login-invalid-1 500ms ease-in-out both;
+}
+
+@keyframes login-invalid-0 {
+	0%, 99% {
+		background-color: rgba(178, 35, 24, .45);
+		backdrop-filter: blur(8px);
+	}
+	0%, 100% {
+		transform: translateX(0);
+	}
+	10%, 50%, 90% {
+		transform: translateX(-5px);
+	}
+	30%, 70% {
+		transform: translateX(5px);
+	}
+	100% {
+		background-color: rgba(32, 31, 31, .175);
+		backdrop-filter: blur(5px);
+	}
+}
+
+@keyframes login-invalid-1 {
+	0%, 99% {
+		background-color: rgba(178, 35, 24, .45);
+		backdrop-filter: blur(8px);
+	}
+	0%, 100% {
+		transform: translateX(0);
+	}
+	10%, 50%, 90% {
+		transform: translateX(-5px);
+	}
+	30%, 70% {
+		transform: translateX(5px);
+	}
+	100% {
+		background-color: rgba(32, 31, 31, .175);
+		backdrop-filter: blur(5px);
+	}
 }
 
 .login-eyebrow,
@@ -114,7 +170,7 @@ h1 {
 }
 
 h2 {
-	color: #19333b;
+	color: #4d8596;
 	font-size: 1.1rem;
 }
 
@@ -190,6 +246,26 @@ button:hover {
 	background: #000;
 }
 
+.dashboard-page .header-actions .alerts-button {
+	background: #2563eb;
+}
+
+.dashboard-page .header-actions .simulation-button {
+	background: #a34f20;
+}
+
+.dashboard-page .header-actions .simulation-button:hover {
+	background: #803b18;
+}
+
+.dashboard-page .header-actions .alerts-button:hover {
+	background: #1d4ed8;
+}
+
+.dashboard-page .header-actions .logout-button:hover {
+	background: #b42318;
+}
+
 .header-actions {
 	display: flex;
 	flex-wrap: wrap;
@@ -211,8 +287,55 @@ button:hover {
 	color: #f0f2f2;
 }
 
+.welcome-message {
+	margin: 0;
+	color: #dce8e2;
+	font-weight: 700;
+	text-align: center;
+}
+
+.server-status {
+	display: flex;
+	align-items: center;
+	gap: 9px;
+	width: fit-content;
+	margin: -14px 0 8px;
+	border: 1px solid rgba(255, 255, 255, .2);
+	border-radius: 8px;
+	padding: 9px 12px;
+	color: #fff;
+	background: rgba(0, 0, 0, .24);
+	font-size: .88rem;
+	font-weight: 700;
+}
+
+.server-status-indicator {
+	width: 10px;
+	height: 10px;
+	flex: 0 0 10px;
+	border-radius: 50%;
+}
+
+.server-status.is-connected .server-status-indicator {
+	background: #4ade80;
+}
+
+.server-status.is-simulated .server-status-indicator {
+	background: #fbbf24;
+}
+
+.server-status.is-disconnected .server-status-indicator {
+	background: #f87171;
+}
+
 .alerts-card {
 	gap: 28px;
+}
+
+.edit-alert-card {
+	border-color: rgb(101, 126, 249);
+	background: rgba(8, 11, 11, .72);
+	backdrop-filter: blur(12px);
 }
 
 .alert-form-section,
@@ -223,9 +346,29 @@ button:hover {
 
 .threshold-form {
 	display: grid;
-	grid-template-columns: 1.2fr 1.2fr .8fr auto;
+	grid-template-columns: 1.2fr 1.2fr 1.2fr .8fr .8fr auto;
 	align-items: end;
 	gap: 10px;
+}
+
+.threshold-edit-page {
+	width: min(100%, 760px);
+	margin: 0 auto;
+}
+
+.threshold-edit-page > h2 {
+	color: #fff;
+}
+
+.threshold-edit-form {
+	display: grid;
+	grid-template-columns: repeat(2, minmax(0, 1fr));
+	align-items: end;
+	gap: 14px;
+}
+
+.threshold-edit-form .threshold-form-actions {
+	grid-column: 1 / -1;
 }
 
 .threshold-field {
@@ -447,6 +590,15 @@ button:hover {
 
 	.threshold-form {
 		display: grid;
+		grid-template-columns: 1fr;
+	}
+
+	.threshold-edit-form {
+		grid-template-columns: 1fr;
+	}
+
+	.threshold-edit-form .threshold-form-actions {
+		grid-column: auto;
 	}
 
 	.threshold-form-actions,

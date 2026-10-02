@@ -3,27 +3,35 @@ import { useNavigate } from 'react-router-dom'
 
 const LOCAL_USERNAME = 'numberone'
 const LOCAL_PASSWORD = '1234'
+const SESSION_USERNAME_KEY = 'monitorduo.username'
 
 function LoginPage() {
     const navigate = useNavigate()
     const [username, setUsername] = useState('')
     const [password, setPassword] = useState('')
     const [error, setError] = useState('')
+    const [failedAttempts, setFailedAttempts] = useState(0)
+
     function handleSubmit(event) {
         event.preventDefault()
 
         if (username !== LOCAL_USERNAME || password !== LOCAL_PASSWORD) {
             setError('Intruso Intruso Intruso')
+            setFailedAttempts((attempts) => attempts + 1)
             return
         }
 
         setError('')
+    window.sessionStorage.setItem(SESSION_USERNAME_KEY, username)
         navigate('/home', { replace: true })
     }
 
     return (
         <main className="login-page">
-            <section className="login-card" aria-labelledby="login-title">
+            <section
+                className={`login-card${failedAttempts > 0 ? ` login-card--error-${failedAttempts % 2}` : ''}`}
+                aria-labelledby="login-title"
+            >
                 <p className="login-eyebrow">MonitorDuo</p>
                 <h1 id="login-title">Iniciar sesión</h1>
                 <p className="login-description">Accede al panel de monitoreo.</p>
