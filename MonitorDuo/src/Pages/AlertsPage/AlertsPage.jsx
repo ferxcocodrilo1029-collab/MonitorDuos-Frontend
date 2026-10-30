@@ -3,11 +3,11 @@ import { useNavigate } from 'react-router-dom'
 import {
     getThresholds,
     saveThresholds,
-} from '../services/thresholdStorage'
+} from '../../services/thresholdStorage'
 
 const EMPTY_FORM = {
     name: '',
-    equipment: 'Servidor pendiente de conexión',
+    equipment: 'Todos los equipos',
     metric: 'CPU',
     operator: 'gt',
     value: '',
@@ -126,7 +126,7 @@ function AlertsPage() {
                                 type="text"
                                 value={form.name}
                                 onChange={(event) => setForm({ ...form, name: event.target.value })}
-                                placeholder="..."
+                                placeholder="Ej. Alerta CPU alto"
                                 required
                             />
                         </div>
@@ -137,7 +137,8 @@ function AlertsPage() {
                                 value={form.equipment}
                                 onChange={(event) => setForm({ ...form, equipment: event.target.value })}
                             >
-                                <option>Servidor pendiente de conexión</option>
+                                <option value="Todos los equipos">Todos los equipos</option>
+                                <option value="Servidor Local">Servidor Local</option>
                             </select>
                         </div>
 
@@ -148,9 +149,9 @@ function AlertsPage() {
                                 value={form.metric}
                                 onChange={(event) => setForm({ ...form, metric: event.target.value })}
                             >
-                                <option>CPU</option>
-                                <option>Memoria RAM</option>
-                                <option>Disco</option>
+                                <option value="CPU">CPU</option>
+                                <option value="Memoria RAM">Memoria RAM</option>
+                                <option value="Disco">Disco</option>
                             </select>
                         </div>
 
@@ -208,7 +209,8 @@ function AlertsPage() {
                                         value={form.equipment}
                                         onChange={(event) => setForm({ ...form, equipment: event.target.value })}
                                     >
-                                        <option>Servidor pendiente de conexión</option>
+                                        <option value="Todos los equipos">Todos los equipos</option>
+                                        <option value="Servidor Local">Servidor Local</option>
                                     </select>
                                 </div>
                                 <div className="threshold-field">
@@ -218,9 +220,9 @@ function AlertsPage() {
                                         value={form.metric}
                                         onChange={(event) => setForm({ ...form, metric: event.target.value })}
                                     >
-                                        <option>CPU</option>
-                                        <option>Memoria RAM</option>
-                                        <option>Disco</option>
+                                        <option value="CPU">CPU</option>
+                                        <option value="Memoria RAM">Memoria RAM</option>
+                                        <option value="Disco">Disco</option>
                                     </select>
                                 </div>
                                 <div className="threshold-field">

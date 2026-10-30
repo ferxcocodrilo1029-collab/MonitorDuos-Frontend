@@ -1,8 +1,8 @@
 const THRESHOLDS_STORAGE_KEY = 'monitorduo.thresholds'
 
 export const DEFAULT_THRESHOLDS = [
-    { id: 'cpu-default', equipment: 'Servidor pendiente de conexión', metric: 'CPU', operator: 'gt', value: 80, unit: '%' },
-    { id: 'memory-default', equipment: 'Servidor pendiente de conexión', metric: 'Memoria RAM', operator: 'gt', value: 85, unit: '%' },
+    { id: 'cpu-default', equipment: 'Todos los equipos', metric: 'CPU', operator: 'gt', value: 80, unit: '%' },
+    { id: 'memory-default', equipment: 'Todos los equipos', metric: 'Memoria RAM', operator: 'gt', value: 85, unit: '%' },
 ]
 
 export function getThresholds() {
@@ -24,7 +24,7 @@ export function saveThresholds(thresholds) {
 }
 
 export function isThresholdExceeded(threshold, currentValue) {
-    if (currentValue === null || currentValue === undefined) {
+    if (currentValue === null || currentValue === undefined || Number.isNaN(currentValue)) {
         return false
     }
 
