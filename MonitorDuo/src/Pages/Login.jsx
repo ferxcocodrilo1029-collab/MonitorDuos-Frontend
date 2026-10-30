@@ -1,29 +1,36 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-
-const LOCAL_USERNAME = 'numberone'
-const LOCAL_PASSWORD = '1234'
-const SESSION_USERNAME_KEY = 'monitorduo.username'
+import { login } from '../services/authService'
 
 function LoginPage() {
     const navigate = useNavigate()
     const [username, setUsername] = useState('')
     const [password, setPassword] = useState('')
     const [error, setError] = useState('')
+    const [isLoading, setIsLoading] = useState(false)
     const [failedAttempts, setFailedAttempts] = useState(0)
 
-    function handleSubmit(event) {
+    async function handleSubmit(event) {
         event.preventDefault()
 
-        if (username !== LOCAL_USERNAME || password !== LOCAL_PASSWORD) {
-            setError('Intruso Intruso Intruso')
-            setFailedAttempts((attempts) => attempts + 1)
+        const trimmedUser = username.trim()
+        if (!trimmedUser) {
+            setError('Por favor ingresa tu nombre de usuario.')
             return
         }
 
+        setIsLoading(true)
         setError('')
-    window.sessionStorage.setItem(SESSION_USERNAME_KEY, username)
-        navigate('/home', { replace: true })
+
+        try {
+            await login(trimmedUser, password)
+            navigate('/home', { replace: true })
+        } catch (err) {
+            setError(err.message || 'Error al conectar con el servidor')
+            setFailedAttempts((attempts) => attempts + 1)
+        } finally {
+            setIsLoading(false)
+        }
     }
 
     return (
@@ -34,7 +41,7 @@ function LoginPage() {
             >
                 <p className="login-eyebrow">MonitorDuo</p>
                 <h1 id="login-title">Iniciar sesión</h1>
-                <p className="login-description">Accede al panel de monitoreo.</p>
+                <p className="login-description">Accede al panel de monitoreo del sistema.</p>
 
                 <form onSubmit={handleSubmit}>
                     <label htmlFor="username">Usuario</label>
@@ -48,6 +55,8 @@ function LoginPage() {
                             setUsername(event.target.value)
                             setError('')
                         }}
+                        disabled={isLoading}
+                        placeholder="Ej. admin"
                         required
                     />
 
@@ -62,11 +71,19 @@ function LoginPage() {
                             setPassword(event.target.value)
                             setError('')
                         }}
-                        required
+                        disabled={isLoading}
+                        placeholder="••••••••"
                     />
 
-                    {error && <p style={{ color: 'red', fontWeight: 'bold' }} role="alert">{error}</p>}
-                    <button type="submit">Ingresar</button>
+                    {error && (
+                        <p style={{ color: '#ff8a80', fontWeight: 'bold', margin: '4px 0' }} role="alert">
+                            {error}
+                        </p>
+                    )}
+
+                    <button type="submit" disabled={isLoading}>
+                        {isLoading ? 'Conectando...' : 'Ingresar'}
+                    </button>
                 </form>
             </section>
         </main>
@@ -74,4 +91,3 @@ function LoginPage() {
 }
 
 export default LoginPage
-    
