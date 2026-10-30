@@ -1,8 +1,8 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { useAuth } from '../context/useAuth'
-import { getLiveMetrics, getHistoryMetrics } from '../services/monitorService'
-import { getThresholds, isThresholdExceeded } from '../services/thresholdStorage'
+import { useAuth } from '../../context/useAuth'
+import { getLiveMetrics, getHistoryMetrics } from '../../services/monitorService'
+import { getThresholds, isThresholdExceeded } from '../../services/thresholdStorage'
 
 const emptyMetric = '--'
 

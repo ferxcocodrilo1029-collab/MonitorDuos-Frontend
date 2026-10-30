@@ -88,3 +88,55 @@ cp .env.example .env
    - **Login (`POST index.php?action=login`):** Envía `{ usuario, contrasena }`.
    - **Perfil / Validación de Sesión (`GET index.php?action=profile`):** Verifica la cookie de sesión (`PHPSESSID`). Si responde `401`, redirige automáticamente a `/`.
    - **Logout (`POST index.php?action=logout`):** Destruye la sesión activa y regresa al login.
+
+---
+
+## Estructura de Páginas del Frontend
+
+Cada página del frontend se organiza dentro de su propia carpeta modular en `src/Pages/`:
+
+```
+MonitorDuo/src/
+├── Pages/
+│   ├── AlertsPage/
+│   │   ├── AlertsPage.jsx
+│   │   └── index.js
+│   ├── HomePage/
+│   │   ├── HomePage.jsx
+│   │   └── index.js
+│   └── Login/
+│       ├── Login.jsx
+│       └── index.js
+├── context/
+│   ├── AuthContext.jsx
+│   ├── AuthContextInstance.js
+│   └── useAuth.js
+└── services/
+    ├── api.js
+    ├── authService.js
+    ├── monitorService.js
+    └── thresholdStorage.js
+```
+
+---
+
+## Funcionalidades Pendientes y Trabajo Futuro (Próximos Issues)
+
+Tras la resolución del Issue #2 (conexión de login, protección de rutas y consumo de métricas desde el backend), las siguientes partes quedan identificadas como trabajo pendiente para los próximos sprints/issues:
+
+1. **Control de Permisos y Roles Multi-Host (Admin / Viewer):**
+   - Actualmente el acceso está protegido globalmente mediante `ProtectedRoute` y la consulta a `index.php?action=profile`.
+   - *Pendiente:* Cuando el backend envíe el rol del usuario y los hosts asociados en la sesión, el frontend implementará el selector dinámico de servidores y limitará la vista de equipos según los permisos (`admin` = todos los hosts; `viewer` = hosts asignados).
+
+2. **Persistencia de Alertas y Umbrales en Base de Datos:**
+   - La configuración de umbrales en `AlertsPage` opera de forma local con `localStorage` (`thresholdStorage.js`).
+   - *Pendiente:* Desarrollar los endpoints en backend para almacenar, editar y eliminar umbrales en MySQL, así como el historial de alertas disparadas.
+
+3. **Generación y Descarga de Reportes en TXT / CSV:**
+   - En la vista de métricas históricas se pueden consultar los registros de la base de datos por rango de fechas.
+   - *Pendiente:* Agregar la funcionalidad para descargar un reporte formateado (.txt o .csv) con el resumen estadístico de CPU, RAM y disco.
+
+4. **Alertas en Tiempo Real:**
+   - Las métricas se actualizan por sondeo periódico cada 10 segundos.
+   - *Pendiente:* Integrar banners o notificaciones emergentes de umbrales sobrepasados y evaluar transporte en tiempo real (Server-Sent Events / WebSockets).
+

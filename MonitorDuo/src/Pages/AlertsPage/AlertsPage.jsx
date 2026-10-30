@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom'
 import {
     getThresholds,
     saveThresholds,
-} from '../services/thresholdStorage'
+} from '../../services/thresholdStorage'
 
 const EMPTY_FORM = {
     name: '',
