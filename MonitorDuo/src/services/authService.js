@@ -1,42 +1,44 @@
 import { request } from './api'
 
-const SESSION_USERNAME_KEY = 'monitorduo.username'
-
-export async function login(usuario, password = '') {
+/**
+ * Inicia sesión enviando credenciales al backend PHP.
+ * Se envían en el cuerpo JSON (para el contrato final) y en query param
+ * para compatibilidad con la implementación previa del backend.
+ */
+export async function login(usuario, contrasena = '') {
   const params = new URLSearchParams({
     action: 'login',
     usuario: usuario,
   })
 
-  const data = await request(`index.php?${params.toString()}`, {
+  return request(`index.php?${params.toString()}`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ action: 'login', usuario, password }),
+    body: JSON.stringify({ action: 'login', usuario, contrasena }),
   })
-
-  const username = data.usuario || usuario
-  window.sessionStorage.setItem(SESSION_USERNAME_KEY, username)
-  return data
 }
 
-export async function checkSession(signal) {
+/**
+ * Consulta el perfil/sesión activa en el backend.
+ * Devuelve 200 con la información del usuario si la sesión es válida,
+ * o 401 si no está autenticado.
+ */
+export async function perfil(signal) {
   return request('index.php?action=profile', { signal })
 }
 
+/**
+ * Alias de perfil para compatibilidad
+ */
+export async function checkSession(signal) {
+  return perfil(signal)
+}
+
+/**
+ * Cierra la sesión activa en el backend destruyendo la cookie.
+ */
 export async function logout() {
-  try {
-    await request('index.php?action=logout')
-  } catch {
-    // Si falla el servidor, se limpia la sesión local de todas formas
-  } finally {
-    window.sessionStorage.removeItem(SESSION_USERNAME_KEY)
-  }
-}
-
-export function getSavedUser() {
-  return window.sessionStorage.getItem(SESSION_USERNAME_KEY)
-}
-
-export function isAuthenticated() {
-  return Boolean(getSavedUser())
+  return request('index.php?action=logout', {
+    method: 'POST',
+  })
 }

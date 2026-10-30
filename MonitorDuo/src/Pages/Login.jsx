@@ -1,14 +1,22 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { login } from '../services/authService'
+import { useAuth } from '../context/useAuth'
 
 function LoginPage() {
     const navigate = useNavigate()
+    const { user, loading: isCheckingSession, loginUser } = useAuth()
     const [username, setUsername] = useState('')
     const [password, setPassword] = useState('')
     const [error, setError] = useState('')
     const [isLoading, setIsLoading] = useState(false)
     const [failedAttempts, setFailedAttempts] = useState(0)
+
+    // Si ya existe sesión activa comprobada por el backend, redirigir a /home
+    useEffect(() => {
+        if (!isCheckingSession && user) {
+            navigate('/home', { replace: true })
+        }
+    }, [isCheckingSession, user, navigate])
 
     async function handleSubmit(event) {
         event.preventDefault()
@@ -23,14 +31,33 @@ function LoginPage() {
         setError('')
 
         try {
-            await login(trimmedUser, password)
+            await loginUser(trimmedUser, password)
             navigate('/home', { replace: true })
         } catch (err) {
-            setError(err.message || 'Error al conectar con el servidor')
+            if (err.status === 401) {
+                setError('Usuario o contraseña incorrectos')
+            } else if (
+                err.status === 0 ||
+                err.message?.toLowerCase().includes('conexión') ||
+                err.message?.toLowerCase().includes('fetch') ||
+                err.message?.toLowerCase().includes('failed to fetch')
+            ) {
+                setError('No se pudo conectar con el servidor')
+            } else {
+                setError(err.message || 'Error al conectar con el servidor')
+            }
             setFailedAttempts((attempts) => attempts + 1)
         } finally {
             setIsLoading(false)
         }
+    }
+
+    if (isCheckingSession) {
+        return (
+            <main className="login-page" style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+                <p style={{ color: '#d0dfd8', fontSize: '1.1rem' }}>Verificando sesión con el servidor...</p>
+            </main>
+        )
     }
 
     return (

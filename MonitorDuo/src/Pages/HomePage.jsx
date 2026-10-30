@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { getSavedUser, logout, checkSession } from '../services/authService'
+import { useAuth } from '../context/useAuth'
 import { getLiveMetrics, getHistoryMetrics } from '../services/monitorService'
 import { getThresholds, isThresholdExceeded } from '../services/thresholdStorage'
 
@@ -46,8 +46,9 @@ function MetricCard({ title, currentValue, unit = '%' }) {
 
 function HomePage() {
     const navigate = useNavigate()
+    const { user, logoutUser } = useAuth()
     const [activeTab, setActiveTab] = useState('live')
-    const username = getSavedUser() || 'Usuario'
+    const username = user || 'Usuario'
 
     // Estado del servidor y métricas en vivo
     const [serverName, setServerName] = useState('Detectando equipo...')
@@ -150,7 +151,7 @@ function HomePage() {
     })
 
     async function handleLogout() {
-        await logout()
+        await logoutUser()
         navigate('/', { replace: true })
     }
 
